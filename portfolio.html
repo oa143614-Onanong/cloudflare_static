@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onanong Autama — Infrastructure &amp; Security Engineer</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-void:#0A121B;
+    --bg-panel:#101B28;
+    --bg-panel-2:#0D1720;
+    --line:#1E2E3F;
+    --cyan:#5EEAD4;
+    --cyan-dim:#5EEAD433;
+    --amber:#F5A65B;
+    --text-primary:#E8EEF4;
+    --text-muted:#7E93A7;
+    --text-faint:#4B5D71;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg-void);
+    color:var(--text-primary);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;
+    background-attachment:fixed;
+    background-position:center top;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background:radial-gradient(ellipse 900px 500px at 20% -5%, rgba(94,234,212,0.10), transparent 60%),
+               radial-gradient(ellipse 700px 500px at 100% 10%, rgba(245,166,91,0.06), transparent 60%),
+               radial-gradient(ellipse 100% 100% at 50% 100%, rgba(94,234,212,0.03), transparent 70%);
+    pointer-events:none;
+    z-index:0;
+  }
+  .container-narrow{max-width:1040px; margin:0 auto; padding:0 24px; position:relative; z-index:1;}
+
+  h1,h2,h3,h4,.font-display{font-family:'Space Grotesk', sans-serif;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+  a{color:inherit; text-decoration:none;}
+
+  ::selection{background:var(--cyan); color:#06110F;}
+  :focus-visible{outline:2px solid var(--cyan); outline-offset:3px;}
+
+  /* ===== NAV ===== */
+  .nav-bar{
+    position:sticky; top:0; z-index:50;
+    background:rgba(10,18,27,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:1040px; margin:0 auto;}
+  .nav-brand{display:flex; align-items:center; gap:10px; font-family:'Space Grotesk'; font-weight:600; letter-spacing:0.02em;}
+  .pulse-dot{width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 0 0 var(--cyan-dim); animation:pulse 2.4s infinite;}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(94,234,212,0.5);}
+    70%{box-shadow:0 0 0 8px rgba(94,234,212,0);}
+    100%{box-shadow:0 0 0 0 rgba(94,234,212,0);}
+  }
+  .nav-links{display:flex; gap:28px; font-size:13px;}
+  .nav-links a{color:var(--text-muted); font-family:'JetBrains Mono'; letter-spacing:0.03em; transition:color .2s;}
+  .nav-links a:hover{color:var(--cyan);}
+  .nav-links a span{color:var(--text-faint);}
+
+  /* ===== HERO ===== */
+  .hero{padding:88px 0 60px; position:relative;}
+  .terminal-tag{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono'; font-size:12px; color:var(--cyan);
+    background:rgba(94,234,212,0.06); border:1px solid rgba(94,234,212,0.25);
+    padding:6px 12px; border-radius:100px; margin-bottom:24px;
+  }
+  .hero h1{
+    font-size:clamp(2.4rem, 5.5vw, 4.2rem);
+    line-height:1.05; font-weight:700; letter-spacing:-0.02em;
+    margin-bottom:18px;
+  }
+  .hero h1 .accent{color:var(--cyan);}
+  .type-line{
+    font-family:'JetBrains Mono'; color:var(--text-muted); font-size:15px; margin-bottom:28px;
+    min-height:22px;
+  }
+  .type-line .caret{display:inline-block; width:8px; height:16px; background:var(--cyan); vertical-align:-2px; margin-left:2px; animation:blink 1s steps(1) infinite;}
+  @keyframes blink{50%{opacity:0;}}
+  .hero p.lede{font-size:17px; color:var(--text-muted); max-width:520px; margin-bottom:32px; line-height:1.65;}
+  .btn-cyan{
+    background:var(--cyan); color:#06110F; font-weight:600; padding:12px 22px; border-radius:8px;
+    font-size:14px; display:inline-flex; align-items:center; gap:8px; transition:transform .15s, box-shadow .15s;
+  }
+  .btn-cyan:hover{transform:translateY(-2px); box-shadow:0 8px 24px rgba(94,234,212,0.25); color:#06110F;}
+  .btn-outline{
+    border:1px solid var(--line); color:var(--text-primary); padding:12px 22px; border-radius:8px;
+    font-size:14px; display:inline-flex; align-items:center; gap:8px; transition:border-color .15s, color .15s;
+  }
+  .btn-outline:hover{border-color:var(--cyan); color:var(--cyan);}
+
+  /* ===== NODE GRAPH (signature) ===== */
+  .node-graph-wrap{position:relative; height:100%; min-height:340px;}
+  .graph-panel{
+    background:var(--bg-panel); border:1px solid var(--line); border-radius:14px;
+    padding:20px; height:100%;
+  }
+  .graph-panel .panel-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;}
+  .panel-head .dots{display:flex; gap:6px;}
+  .panel-head .dots span{width:8px; height:8px; border-radius:50%; background:var(--line);}
+  .panel-head .label{font-family:'JetBrains Mono'; font-size:11px; color:var(--text-faint); letter-spacing:0.05em;}
+  .node-label{font-family:'JetBrains Mono'; font-size:11px; fill:var(--text-muted);}
+  .node-core-label{font-family:'Space Grotesk'; font-size:12px; font-weight:600; fill:var(--bg-void);}
+  .edge{stroke:var(--cyan); stroke-opacity:0.35; stroke-width:1.4;}
+  .edge-flow{stroke:var(--cyan); stroke-width:1.6; stroke-dasharray:6 10; animation:flow 3.5s linear infinite;}
+  @keyframes flow{to{stroke-dashoffset:-160;}}
+  .node-outer{fill:var(--bg-panel-2); stroke:var(--line); stroke-width:1.2;}
+  .node-outer.pulse{animation:node-pulse 3s ease-in-out infinite;}
+  @keyframes node-pulse{0%,100%{stroke:var(--line);} 50%{stroke:var(--cyan);}}
+  .node-core{fill:var(--cyan);}
+
+  /* ===== STATUS STRIP ===== */
+  .status-strip{border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:rgba(16,27,40,0.5);}
+  .status-strip .container-narrow{display:grid; grid-template-columns:repeat(4,1fr); gap:0;}
+  .status-cell{padding:22px 20px; border-left:1px solid var(--line);}
+  .status-cell:first-child{border-left:none;}
+  .status-cell .num{font-family:'Space Grotesk'; font-size:1.8rem; font-weight:700; color:var(--text-primary);}
+  .status-cell .num .accent{color:var(--cyan);}
+  .status-cell .cap{font-family:'JetBrains Mono'; font-size:11px; color:var(--text-faint); letter-spacing:0.06em; text-transform:uppercase; margin-top:4px;}
+
+  /* ===== SECTION HEADERS ===== */
+  section{padding:80px 0;}
+  .sec-eyebrow{font-family:'JetBrains Mono'; font-size:12px; color:var(--cyan); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px; display:flex; align-items:center; gap:10px;}
+  .sec-eyebrow::before{content:""; width:22px; height:1px; background:var(--cyan);}
+  .sec-title{font-size:clamp(1.6rem,3vw,2.2rem); font-weight:700; margin-bottom:44px; letter-spacing:-0.01em;}
+
+  /* ===== SKILLS ===== */
+  .module-card{
+    background:var(--bg-panel); border:1px solid var(--line); border-radius:12px; padding:22px;
+    height:100%; transition:border-color .2s, transform .2s;
+  }
+  .module-card:hover{border-color:rgba(94,234,212,0.35); transform:translateY(-3px);}
+  .module-head{display:flex; align-items:center; gap:10px; margin-bottom:14px;}
+  .module-dot{width:7px; height:7px; border-radius:50%;}
+  .module-title{font-family:'Space Grotesk'; font-weight:600; font-size:14px; letter-spacing:0.01em;}
+  .tag{
+    display:inline-block; font-family:'JetBrains Mono'; font-size:11.5px; color:var(--text-muted);
+    background:var(--bg-panel-2); border:1px solid var(--line); padding:4px 9px; border-radius:6px; margin:0 6px 6px 0;
+  }
+
+  /* ===== EXPERIENCE LOG ===== */
+  .log-rail{position:relative; padding-left:34px;}
+  .log-rail::before{content:""; position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .log-entry{position:relative; padding-bottom:52px;}
+  .log-entry:last-child{padding-bottom:0;}
+  .log-node{position:absolute; left:-34px; top:4px; width:13px; height:13px; border-radius:50%; background:var(--bg-void); border:2px solid var(--cyan); box-shadow:0 0 0 4px var(--bg-void);}
+  .log-time{font-family:'JetBrains Mono'; font-size:12px; color:var(--text-faint); margin-bottom:6px; letter-spacing:0.03em;}
+  .log-role{font-family:'Space Grotesk'; font-size:1.15rem; font-weight:700; margin-bottom:2px;}
+  .log-org{color:var(--cyan); font-size:14px; font-weight:500; margin-bottom:14px;}
+  .log-org .loc{color:var(--text-faint); font-family:'JetBrains Mono'; font-size:12px; font-weight:400;}
+  .log-list{list-style:none; padding:0; margin:0; color:var(--text-muted); font-size:14.5px; line-height:1.75;}
+  .log-list li{position:relative; padding-left:18px; margin-bottom:8px;}
+  .log-list li::before{content:"›"; position:absolute; left:0; color:var(--cyan);}
+
+  /* ===== EDU / CERTS ===== */
+  .card-flat{background:var(--bg-panel); border:1px solid var(--line); border-radius:12px; padding:24px; height:100%;}
+  .cert-row{display:flex; justify-content:space-between; align-items:flex-start; padding:14px 0; border-bottom:1px solid var(--line); gap:14px;}
+  .cert-row:last-child{border-bottom:none; padding-bottom:0;}
+  .cert-row:first-child{padding-top:0;}
+  .cert-name{font-weight:600; font-size:14.5px; margin-bottom:3px;}
+  .cert-code{font-family:'JetBrains Mono'; font-size:11px; color:var(--text-faint); word-break:break-all;}
+  .badge-verified{font-family:'JetBrains Mono'; font-size:10.5px; color:var(--amber); border:1px solid rgba(245,166,91,0.35); background:rgba(245,166,91,0.08); padding:3px 8px; border-radius:100px; white-space:nowrap;}
+
+  .edu-year{font-family:'JetBrains Mono'; font-size:12px; color:var(--text-faint); margin-bottom:6px;}
+  .edu-degree{font-family:'Space Grotesk'; font-weight:600; font-size:16px; margin-bottom:4px;}
+  .edu-school{color:var(--text-muted); font-size:14px;}
+
+  /* ===== PROJECTS ===== */
+  .project-card{background:var(--bg-panel); border:1px solid var(--line); border-radius:14px; padding:28px; height:100%;}
+  .project-num{font-family:'JetBrains Mono'; font-size:12px; color:var(--text-faint); margin-bottom:14px;}
+  .project-title{font-family:'Space Grotesk'; font-weight:700; font-size:1.25rem; margin-bottom:14px;}
+  .project-list{list-style:none; padding:0; margin:0; color:var(--text-muted); font-size:14px; line-height:1.7;}
+  .project-list li{position:relative; padding-left:18px; margin-bottom:8px;}
+  .project-list li::before{content:"$"; position:absolute; left:0; color:var(--amber); font-family:'JetBrains Mono';}
+
+  /* ===== FOOTER ===== */
+  footer{border-top:1px solid var(--line); padding:44px 0; }
+  .footer-links{display:flex; gap:26px; flex-wrap:wrap;}
+  .footer-links a{font-family:'JetBrains Mono'; font-size:13px; color:var(--text-muted); transition:color .2s;}
+  .footer-links a:hover{color:var(--cyan);}
+  .footer-note{color:var(--text-faint); font-size:12px; font-family:'JetBrains Mono'; margin-top:18px;}
+
+  @media (max-width:767px){
+    .nav-links{display:none;}
+    .status-strip .container-narrow{grid-template-columns:repeat(2,1fr);}
+    .status-cell:nth-child(3){border-left:none;}
+    .status-cell:nth-child(1),.status-cell:nth-child(2){border-bottom:1px solid var(--line); padding-bottom:18px;}
+    .status-cell:nth-child(3),.status-cell:nth-child(4){padding-top:18px;}
+    section{padding:56px 0;}
+    .hero{padding:64px 0 40px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <div class="nav-brand"><span class="pulse-dot"></span>ONANONG.AUTAMA</div>
+    <div class="nav-links">
+      <a href="#skills"><span>01/</span> skills</a>
+      <a href="#experience"><span>02/</span> experience</a>
+      <a href="#education"><span>03/</span> education</a>
+      <a href="#projects"><span>04/</span> projects</a>
+      <a href="#contact"><span>05/</span> contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container-narrow">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7">
+        <div class="terminal-tag"><span class="pulse-dot" style="width:6px;height:6px;"></span> status: open to new roles</div>
+        <h1>Onanong Autama<br>builds infrastructure<br>that <span class="accent">stays up.</span></h1>
+        <div class="type-line" id="typeLine"></div>
+        <p class="lede">Cloud &amp; infrastructure engineer working across AWS, Kubernetes, and network security — from provisioning with Terraform to hunting anomalies in live traffic.</p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="#experience" class="btn-cyan">View experience →</a>
+          <a href="#contact" class="btn-outline">Contact</a>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="node-graph-wrap">
+          <div class="graph-panel">
+            <div class="panel-head">
+              <span class="label">core-network.topology</span>
+              <div class="dots"><span></span><span></span><span></span></div>
+            </div>
+            <svg viewBox="0 0 340 300" width="100%" height="300" aria-hidden="true">
+              <!-- edges -->
+              <line class="edge" x1="170" y1="150" x2="80" y2="60"/>
+              <line class="edge" x1="170" y1="150" x2="270" y2="55"/>
+              <line class="edge" x1="170" y1="150" x2="60" y2="220"/>
+              <line class="edge" x1="170" y1="150" x2="270" y2="235"/>
+              <line class="edge-flow" x1="170" y1="150" x2="80" y2="60"/>
+              <line class="edge-flow" x1="170" y1="150" x2="270" y2="235"/>
+              <!-- outer nodes -->
+              <circle class="node-outer pulse" cx="80" cy="60" r="30"/>
+              <text class="node-label" x="80" y="30" text-anchor="middle">CLOUD</text>
+              <text class="node-label" x="80" y="64" text-anchor="middle" fill="var(--text-primary)">AWS</text>
+
+              <circle class="node-outer pulse" cx="270" cy="55" r="30" style="animation-delay:.6s"/>
+              <text class="node-label" x="270" y="25" text-anchor="middle">ORCHESTRATION</text>
+              <text class="node-label" x="270" y="59" text-anchor="middle" fill="var(--text-primary)">K8s</text>
+
+              <circle class="node-outer pulse" cx="60" cy="220" r="30" style="animation-delay:1.2s"/>
+              <text class="node-label" x="60" y="255" text-anchor="middle">SECURITY</text>
+              <text class="node-label" x="60" y="224" text-anchor="middle" fill="var(--text-primary)">CTI</text>
+
+              <circle class="node-outer pulse" cx="270" cy="235" r="30" style="animation-delay:1.8s"/>
+              <text class="node-label" x="270" y="270" text-anchor="middle">AUTOMATION</text>
+              <text class="node-label" x="270" y="239" text-anchor="middle" fill="var(--text-primary)">IaC</text>
+
+              <!-- core node -->
+              <circle class="node-core" cx="170" cy="150" r="26"/>
+              <text class="node-core-label" x="170" y="147" text-anchor="middle">OA</text>
+              <text class="node-core-label" x="170" y="160" text-anchor="middle" style="font-size:8px;">ENGINEER</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATUS STRIP -->
+<div class="status-strip">
+  <div class="container-narrow">
+    <div class="status-cell">
+      <div class="num"><span class="accent">6+</span> yrs</div>
+      <div class="cap">Infra &amp; Networking</div>
+    </div>
+    <div class="status-cell">
+      <div class="num">3</div>
+      <div class="cap">Certifications</div>
+    </div>
+    <div class="status-cell">
+      <div class="num">2</div>
+      <div class="cap">Countries Worked In</div>
+    </div>
+    <div class="status-cell">
+      <div class="num">M.S.</div>
+      <div class="cap">Telecom Systems, 2025</div>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container-narrow">
+    <div class="sec-eyebrow">system.skills</div>
+    <h2 class="sec-title">What runs under the hood</h2>
+    <div class="row g-4">
+      <div class="col-md-3 col-sm-6">
+        <div class="module-card">
+          <div class="module-head"><span class="module-dot" style="background:var(--cyan);"></span><span class="module-title">Cloud &amp; Infra</span></div>
+          <div><span class="tag">AWS</span><span class="tag">Docker</span><span class="tag">Kubernetes</span><span class="tag">Terraform</span></div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="module-card">
+          <div class="module-head"><span class="module-dot" style="background:var(--amber);"></span><span class="module-title">Networking</span></div>
+          <div><span class="tag">TCP/IP</span><span class="tag">VPNs</span><span class="tag">OSI Model</span><span class="tag">RHEL Linux</span></div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="module-card">
+          <div class="module-head"><span class="module-dot" style="background:var(--cyan);"></span><span class="module-title">Security</span></div>
+          <div><span class="tag">NIST 800-53</span><span class="tag">Cyber Threat Intel</span><span class="tag">Machine Learning</span></div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="module-card">
+          <div class="module-head"><span class="module-dot" style="background:var(--amber);"></span><span class="module-title">Dev &amp; Ops</span></div>
+          <div><span class="tag">Python</span><span class="tag">SQL</span><span class="tag">GitHub Actions</span><span class="tag">CI/CD</span><span class="tag">Linux</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" style="background:rgba(16,27,40,0.35); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="container-narrow">
+    <div class="sec-eyebrow">deployment.log</div>
+    <h2 class="sec-title">Where the work happened</h2>
+
+    <div class="log-rail">
+      <div class="log-entry">
+        <div class="log-node"></div>
+        <div class="log-time">JAN 2025 — NOV 2025</div>
+        <div class="log-role">Research Assistant</div>
+        <div class="log-org">Ohio University <span class="loc">// United States</span></div>
+        <ul class="log-list">
+          <li>Designed a quantitative study using Markov chains in Python to predict energy availability.</li>
+          <li>Collected, cleaned, and segmented ten years of historical weather data from Open-Meteo, cutting data-preparation time in half.</li>
+          <li>Automated labeling of raw temperature data into discrete energy states to establish a clear model-evaluation metric.</li>
+          <li>Ran statistical analyses (CDF, ECDF, AIC, BIC) in Jupyter with Pandas, NumPy, and Matplotlib to test for Markov chain properties in the dataset.</li>
+        </ul>
+      </div>
+
+      <div class="log-entry">
+        <div class="log-node"></div>
+        <div class="log-time">MAR 2023 — AUG 2023</div>
+        <div class="log-role">Server / Infrastructure Engineer <span class="mono" style="font-size:12px; color:var(--text-faint); font-weight:400;">(Freelance)</span></div>
+        <div class="log-org">Becelo <span class="loc">// Thailand</span></div>
+        <ul class="log-list">
+          <li>Built and deployed server infrastructure in Python and SQL, improving system efficiency and reliability.</li>
+          <li>Designed and deployed an e-commerce app on Kubernetes (AWS EKS) for scalability and high availability.</li>
+          <li>Wrote Dockerfiles and Helm-deployed Prometheus and Grafana to streamline deployment and observability.</li>
+          <li>Managed AWS EBS/EC2 capacity and monitored infrastructure via CloudWatch, Prometheus, and Grafana.</li>
+        </ul>
+      </div>
+
+      <div class="log-entry">
+        <div class="log-node"></div>
+        <div class="log-time">NOV 2019 — SEP 2022</div>
+        <div class="log-role">Integration Engineer</div>
+        <div class="log-org">Ericsson <span class="loc">// Thailand</span></div>
+        <ul class="log-list">
+          <li>Monitored network performance and resolved technical issues for customers.</li>
+          <li>Built Python modules that cut task execution time from 50 minutes to 20.</li>
+          <li>Enabled JSON/XML data read-write in Python, improving data-processing efficiency.</li>
+          <li>Managed RHEL Linux server environments and advised the team on technical problems.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION + CERTS -->
+<section id="education">
+  <div class="container-narrow">
+    <div class="sec-eyebrow">credentials.verify</div>
+    <h2 class="sec-title">Education &amp; certifications</h2>
+    <div class="row g-4">
+      <div class="col-md-5">
+        <div class="card-flat">
+          <div class="module-title mb-3" style="color:var(--cyan);">EDUCATION</div>
+          <div class="mb-4">
+            <div class="edu-year">AUG 2024 — DEC 2025</div>
+            <div class="edu-degree">M.S., Information &amp; Telecommunication Systems</div>
+            <div class="edu-school">Ohio University</div>
+          </div>
+          <div>
+            <div class="edu-year">JAN 2015 — JAN 2019</div>
+            <div class="edu-degree">B.S., Electrical Engineering</div>
+            <div class="edu-school">Ohio University</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-7">
+        <div class="card-flat">
+          <div class="module-title mb-3" style="color:var(--amber);">CERTIFICATIONS</div>
+          <div class="cert-row">
+            <div>
+              <div class="cert-name">PCAP — Certified Associate in Python Programming</div>
+              <div class="cert-code">verify.openedg.org · wuRs.WUsY.Rnyk</div>
+            </div>
+            <span class="badge-verified">VERIFIED</span>
+          </div>
+          <div class="cert-row">
+            <div>
+              <div class="cert-name">CKA — Certified Kubernetes Administrator</div>
+              <div class="cert-code">training.linuxfoundation.org · LF-ulf892hamx</div>
+            </div>
+            <span class="badge-verified">VERIFIED</span>
+          </div>
+          <div class="cert-row">
+            <div>
+              <div class="cert-name">Google Digital Marketing &amp; E-commerce Certificate</div>
+              <div class="cert-code">credly.com/badges/3b2c19f0…</div>
+            </div>
+            <span class="badge-verified">VERIFIED</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" style="background:rgba(16,27,40,0.35); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="container-narrow">
+    <div class="sec-eyebrow">projects.build</div>
+    <h2 class="sec-title">Things she's shipped</h2>
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="project-card">
+          <div class="project-num">PROJECT · 2025</div>
+          <div class="project-title">AI-Powered Network Intrusion Detection System</div>
+          <ul class="project-list">
+            <li>Built a Python NIDS to detect and auto-block SYN flood attacks on an FTP server using a trained ML model.</li>
+            <li>Captured and labeled traffic with Wireshark under normal and attack conditions for a clean training set.</li>
+            <li>Wrote dynamic IPTables rules to block attacker IPs in real time, without hardcoding.</li>
+            <li>Delivered an end-to-end pipeline — from packet capture to live detection and prevention.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="project-card">
+          <div class="project-num">PROJECT · ONGOING</div>
+          <div class="project-title">Personal Website — Infra as Code</div>
+          <ul class="project-list">
+            <li>Provisioned AWS S3 and Route53 with Terraform to deploy and manage the site's infrastructure.</li>
+            <li>Built a GitHub Actions CI/CD pipeline to automate HTML deploys to S3 on every push.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT / FOOTER -->
+<footer id="contact">
+  <div class="container-narrow">
+    <div class="sec-eyebrow">connection.open</div>
+    <h2 class="sec-title" style="margin-bottom:24px;">Let's talk infrastructure</h2>
+    <div class="footer-links">
+      <a href="mailto:ann.ananong@gmail.com">✉ ann.ananong@gmail.com</a>
+      <a href="tel:6502709784">☎ (650) 270-9784</a>
+      <a href="https://www.linkedin.com/in/onanong-a-863a61192/" target="_blank" rel="noopener">↗ LinkedIn</a>
+      <a href="https://github.com/oa143614-Onanong" target="_blank" rel="noopener">↗ GitHub</a>
+      <a href="https://Onanongautama-porfolio.com" target="_blank" rel="noopener">↗ Portfolio site</a>
+    </div>
+    <div class="footer-note">// Onanong Autama — built with Bootstrap 5. Last deployed 2026.</div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Terminal-style typing line under hero heading
+  (function(){
+    var el = document.getElementById('typeLine');
+    var full = "onanong@infra:~$ whoami  →  cloud & security engineer";
+    var i = 0;
+    function type(){
+      if(i <= full.length){
+        el.innerHTML = full.slice(0, i) + '<span class="caret"></span>';
+        i++;
+        setTimeout(type, 32);
+      }
+    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      el.innerHTML = full;
+    } else {
+      type();
+    }
+  })();
+</script>
+</body>
+</html>
